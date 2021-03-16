@@ -13,10 +13,6 @@ class Const {
         //var BaseURL = "https://developer.github.com/v3/"
         var BaseURL = "https://api.github.com/"
         const val GetAllUsers = "/user"
-
-
-        //const val MatchAPI = "GetGameList"
-        const val UpdateStatusAPI = "UpdateStatus"
-        const val SMZB = "https://smzb.cn/"
+        const val GetUserDetail = "/user/{name}"
     }
 }

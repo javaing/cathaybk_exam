@@ -6,8 +6,10 @@ import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.arttseng.cathaybk.adapter.MyAdapter
 import com.arttseng.cathaybk.databinding.ActivityMainBinding
 import com.arttseng.cathaybk.tools.UserInfo
+import com.arttseng.cathaybk.viewmodel.MyViewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        supportActionBar?.hide()
+        //supportActionBar?.hide()
         dealVM = ViewModelProviders.of(this).get(MyViewModel::class.java)
 
         initObserve()
