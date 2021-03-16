@@ -1,15 +1,15 @@
-package com.arttseng.cathaybk
+package com.arttseng.cathaybk.viewmodel
 
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.arttseng.cathaybk.tools.RetrofitFactory
+import com.arttseng.cathaybk.tools.UserDetail
 import com.arttseng.cathaybk.tools.UserInfo
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -18,67 +18,9 @@ class MyViewModel() : ViewModel() {
 
     private var disContainer : CompositeDisposable = CompositeDisposable()
     private var allHost : MutableLiveData<ArrayList<UserInfo>> = MutableLiveData()
+    private var userDetail : MutableLiveData<UserDetail> = MutableLiveData()
     private var error : MutableLiveData<String> = MutableLiveData()
     private var msg : MutableLiveData<Int> = MutableLiveData()
-
-    init {
-        getAllHostApi()
-    }
-
-    //Api
-    fun getAllHostApi(){
-//        val observer = object : ObserverOnNextListener<UserInfo>{
-//            override fun onSubscribe(d: Disposable) {
-//                disContainer.add(d)
-//            }
-//
-//            override fun onNext(data: UserInfo) {
-//                val result : ArrayList<UserInfo>? = data.result
-//                if(result != null && result.isNotEmpty()){
-//                    allHost.value = result
-//                    setLiveHost(result)
-//                } else {
-//                    allHost.value = ArrayList()
-//                }
-//            }
-//
-//            override fun onComplete() {
-//
-//            }
-//
-//            override fun onError(e: Throwable) {
-//            }
-//        }
-//        ApiMethods.getMoreHostApiNew(ProgressObserver<UserInfo>(null , observer, false))
-
-
-        MainScope().launch(Dispatchers.IO) {
-            val webResponse = RetrofitFactory.WebAccess.API.getUserList().await()
-            var data : List<UserInfo>? = null
-            if (webResponse.isSuccessful) {
-                data = webResponse.body()
-                //Log.d("TEST", data?.toString())
-            } else {
-                Log.d("TEST", "Error ${webResponse.code()}:${webResponse.message()}")
-                //Log.d("TEST", "Error ${webResponse.message()}")
-                data = genTestData()
-            }
-
-            MainScope().launch(Dispatchers.Main) {
-                allHost.value = data as ArrayList<UserInfo>?
-            }
-
-        }
-
-
-    }
-
-    private fun genTestData():List<UserInfo>? {
-        val moshi = Moshi.Builder().build()
-        val type = Types.newParameterizedType(List::class.java, UserInfo::class.java)
-        val adapter = moshi.adapter<List<UserInfo>>(type)
-        return adapter.fromJson(testStr)
-    }
 
     val testStr = """
         [{
@@ -119,7 +61,7 @@ class MyViewModel() : ViewModel() {
     "events_url": "https://api.github.com/users/defunkt/events{/privacy}",
     "received_events_url": "https://api.github.com/users/defunkt/received_events",
     "type": "User",
-    "site_admin": false
+    "site_admin": true
   },
   {
     "login": "pjhyett",
@@ -143,11 +85,47 @@ class MyViewModel() : ViewModel() {
   }]
     """.trimIndent()
 
+    private fun genTestData():List<UserInfo>? {
+        val moshi = Moshi.Builder().build()
+        val type = Types.newParameterizedType(List::class.java, UserInfo::class.java)
+        val adapter = moshi.adapter<List<UserInfo>>(type)
+        return adapter.fromJson(testStr)
+    }
+
+
+
+    init {
+        getAllUser()
+    }
+
+    //Api
+    fun getAllUser(){
+        MainScope().launch(Dispatchers.IO) {
+            //val webResponse = RetrofitFactory.WebAccess.API.getUserList().await()
+//            var data = if (webResponse.isSuccessful) {
+//                webResponse.body()
+//                //Log.d("TEST", data?.toString())
+//            } else {
+//                Log.d("TEST", "Error ${webResponse.code()}:${webResponse.message()}")
+//                //Log.d("TEST", "Error ${webResponse.message()}")
+//                genTestData()
+//            }
+            var data = genTestData()
+
+            MainScope().launch(Dispatchers.Main) {
+                allHost.value = data as ArrayList<UserInfo>?
+            }
+
+        }
+    }
+
+
 
     //Getter
     fun getAllHost() : MutableLiveData<ArrayList<UserInfo>> {
         return allHost
     }
+
 
     fun getError() : MutableLiveData<String>{
         return error
