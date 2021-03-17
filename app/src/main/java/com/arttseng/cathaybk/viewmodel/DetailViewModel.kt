@@ -1,19 +1,17 @@
 package com.arttseng.cathaybk.viewmodel
 
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.arttseng.cathaybk.tools.RetrofitFactory
 import com.arttseng.cathaybk.tools.UserDetail
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.launch
 
-class DetailViewModel() : ViewModel() {
+class DetailViewModel(loginname:String) : ViewModel() {
 
-    private var userDetail : MutableLiveData<UserDetail> = MutableLiveData()
     private val testUserDetail = """
         [{
     "login": "defunkt",
@@ -58,27 +56,19 @@ class DetailViewModel() : ViewModel() {
         return adapter.fromJson(testUserDetail)?.get(0)
     }
 
-
-    //Api
-    fun getUserDetailAPI(loginname: String){
-        MainScope().launch(Dispatchers.IO) {
+    init {
+        viewModelScope.launch {
             val webResponse = RetrofitFactory.WebAccess.API.getUserDetail(loginname).await()
-            var data : UserDetail? = if (webResponse.isSuccessful) {
+            var data = if (webResponse.isSuccessful) {
                 webResponse.body()
             } else {
                 genUserDetail()
-            }
-
-            MainScope().launch(Dispatchers.Main) {
-                userDetail.value = data
-            }
-
+            } as UserDetail
+            dataDeferred.complete(data)
         }
     }
 
-    //Getter
-    fun getUserDetail() : MutableLiveData<UserDetail> {
-        return userDetail
-    }
+    val dataDeferred = CompletableDeferred<UserDetail>()
+    suspend fun loadUserDetail(): UserDetail = dataDeferred.await()
 
 }

@@ -3,13 +3,14 @@ package com.arttseng.cathaybk
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arttseng.cathaybk.adapter.MyAdapter
 import com.arttseng.cathaybk.databinding.ActivityMainBinding
 import com.arttseng.cathaybk.tools.UserInfo
 import com.arttseng.cathaybk.viewmodel.MyViewModel
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,14 +25,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
         dealVM = ViewModelProviders.of(this).get(MyViewModel::class.java)
 
-        initObserve()
+        lifecycleScope.launch {
+            val note = dealVM.loadAllUsers()
+            updateUI(note)
+        }
     }
 
-    private fun initObserve() {
-        dealVM.getAllHost().observe(this, Observer {
-            updateUI(it)
-        })
-    }
 
 
     private fun updateUI(data:List<UserInfo>) {

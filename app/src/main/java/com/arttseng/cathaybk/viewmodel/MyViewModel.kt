@@ -1,21 +1,17 @@
 package com.arttseng.cathaybk.viewmodel
 
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.arttseng.cathaybk.tools.RetrofitFactory
-import com.arttseng.cathaybk.tools.UserDetail
 import com.arttseng.cathaybk.tools.UserInfo
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import io.reactivex.disposables.CompositeDisposable
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.launch
 
 class MyViewModel() : ViewModel() {
 
-    private var allHost : MutableLiveData<ArrayList<UserInfo>> = MutableLiveData()
     private val testStr = """
         [{
     "login": "mojombo",
@@ -87,29 +83,18 @@ class MyViewModel() : ViewModel() {
     }
 
     init {
-        getAllUser()
-    }
-
-    //Api
-    fun getAllUser(){
-        MainScope().launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val webResponse = RetrofitFactory.WebAccess.API.getUserList().await()
-            var data = if (webResponse.isSuccessful) {
+            var note = if (webResponse.isSuccessful) {
                 webResponse.body()
             } else {
                 genTestData()
-            }
-
-            MainScope().launch(Dispatchers.Main) {
-                allHost.value = data as ArrayList<UserInfo>?
-            }
-
+            } as ArrayList<UserInfo>
+            dataDeferred.complete(note)
         }
     }
 
+    val dataDeferred = CompletableDeferred<ArrayList<UserInfo>>()
+    suspend fun loadAllUsers(): ArrayList<UserInfo> = dataDeferred.await()
 
-    //Getter
-    fun getAllHost() : MutableLiveData<ArrayList<UserInfo>> {
-        return allHost
-    }
 }
