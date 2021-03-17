@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        //supportActionBar?.hide()
         dealVM = ViewModelProviders.of(this).get(MyViewModel::class.java)
 
         initObserve()
@@ -33,7 +32,6 @@ class MainActivity : AppCompatActivity() {
             updateUI(it)
         })
     }
-
 
 
     private fun updateUI(data:List<UserInfo>) {

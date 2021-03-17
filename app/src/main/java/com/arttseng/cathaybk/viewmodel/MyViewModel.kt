@@ -1,7 +1,6 @@
 package com.arttseng.cathaybk.viewmodel
 
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.arttseng.cathaybk.tools.RetrofitFactory
@@ -16,13 +15,8 @@ import kotlinx.coroutines.launch
 
 class MyViewModel() : ViewModel() {
 
-    private var disContainer : CompositeDisposable = CompositeDisposable()
     private var allHost : MutableLiveData<ArrayList<UserInfo>> = MutableLiveData()
-    private var userDetail : MutableLiveData<UserDetail> = MutableLiveData()
-    private var error : MutableLiveData<String> = MutableLiveData()
-    private var msg : MutableLiveData<Int> = MutableLiveData()
-
-    val testStr = """
+    private val testStr = """
         [{
     "login": "mojombo",
     "id": 1,
@@ -92,8 +86,6 @@ class MyViewModel() : ViewModel() {
         return adapter.fromJson(testStr)
     }
 
-
-
     init {
         getAllUser()
     }
@@ -101,16 +93,12 @@ class MyViewModel() : ViewModel() {
     //Api
     fun getAllUser(){
         MainScope().launch(Dispatchers.IO) {
-            //val webResponse = RetrofitFactory.WebAccess.API.getUserList().await()
-//            var data = if (webResponse.isSuccessful) {
-//                webResponse.body()
-//                //Log.d("TEST", data?.toString())
-//            } else {
-//                Log.d("TEST", "Error ${webResponse.code()}:${webResponse.message()}")
-//                //Log.d("TEST", "Error ${webResponse.message()}")
-//                genTestData()
-//            }
-            var data = genTestData()
+            val webResponse = RetrofitFactory.WebAccess.API.getUserList().await()
+            var data = if (webResponse.isSuccessful) {
+                webResponse.body()
+            } else {
+                genTestData()
+            }
 
             MainScope().launch(Dispatchers.Main) {
                 allHost.value = data as ArrayList<UserInfo>?
@@ -120,23 +108,8 @@ class MyViewModel() : ViewModel() {
     }
 
 
-
     //Getter
     fun getAllHost() : MutableLiveData<ArrayList<UserInfo>> {
         return allHost
     }
-
-
-    fun getError() : MutableLiveData<String>{
-        return error
-    }
-
-    fun getMsg() : MutableLiveData<Int>{
-        return msg
-    }
-
-    fun clearCancel(){
-        disContainer.clear()
-    }
-
 }

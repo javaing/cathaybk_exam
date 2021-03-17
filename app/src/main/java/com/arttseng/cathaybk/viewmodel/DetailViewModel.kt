@@ -1,27 +1,20 @@
 package com.arttseng.cathaybk.viewmodel
 
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.arttseng.cathaybk.tools.RetrofitFactory
 import com.arttseng.cathaybk.tools.UserDetail
-import com.arttseng.cathaybk.tools.UserInfo
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 class DetailViewModel() : ViewModel() {
 
-    private var disContainer : CompositeDisposable = CompositeDisposable()
     private var userDetail : MutableLiveData<UserDetail> = MutableLiveData()
-    private var error : MutableLiveData<String> = MutableLiveData()
-    private var msg : MutableLiveData<Int> = MutableLiveData()
-
-    val testUserDetail = """
+    private val testUserDetail = """
         [{
     "login": "defunkt",
   "id": 2,
@@ -66,24 +59,16 @@ class DetailViewModel() : ViewModel() {
     }
 
 
-    init {
-        //getAllUser()
-    }
-
     //Api
     fun getUserDetailAPI(loginname: String){
         MainScope().launch(Dispatchers.IO) {
-//            val webResponse = RetrofitFactory.WebAccess.API.getUserDetail(loginname).await()
-//            var data : UserDetail? = if (webResponse.isSuccessful) {
-//                webResponse.body()
-//                //Log.d("TEST", data?.toString())
-//            } else {
-//                Log.d("TEST", "Error ${webResponse.code()}:${webResponse.message()}")
-//                //Log.d("TEST", "Error ${webResponse.message()}")
-//                genUserDetail()
-//            }
+            val webResponse = RetrofitFactory.WebAccess.API.getUserDetail(loginname).await()
+            var data : UserDetail? = if (webResponse.isSuccessful) {
+                webResponse.body()
+            } else {
+                genUserDetail()
+            }
 
-            var data : UserDetail? = genUserDetail()
             MainScope().launch(Dispatchers.Main) {
                 userDetail.value = data
             }
@@ -91,23 +76,9 @@ class DetailViewModel() : ViewModel() {
         }
     }
 
-
-
     //Getter
     fun getUserDetail() : MutableLiveData<UserDetail> {
         return userDetail
-    }
-
-    fun getError() : MutableLiveData<String>{
-        return error
-    }
-
-    fun getMsg() : MutableLiveData<Int>{
-        return msg
-    }
-
-    fun clearCancel(){
-        disContainer.clear()
     }
 
 }

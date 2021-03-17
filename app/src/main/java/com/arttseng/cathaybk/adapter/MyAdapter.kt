@@ -16,7 +16,7 @@ import com.arttseng.cathaybk.tools.roundImage
 
 class MyAdapter: RecyclerView.Adapter<MyAdapter.mViewHolder>() {
 
-    var unAssignList = listOf<UserInfo>()
+    var dataList = listOf<UserInfo>()
     lateinit var ctx: Context
 
     inner class mViewHolder : RecyclerView.ViewHolder {
@@ -26,11 +26,10 @@ class MyAdapter: RecyclerView.Adapter<MyAdapter.mViewHolder>() {
             setItemClick()
         }
 
-
-        lateinit var  img_avatar : ImageView
-        lateinit var  name : TextView
-        lateinit var  tv_staff : TextView
-        lateinit var  parent : View
+        private lateinit var  img_avatar : ImageView
+        private lateinit var  name : TextView
+        private lateinit var  tv_staff : TextView
+        private lateinit var  parent : View
 
         private fun initView(dealBind : ItemUserinfoBinding){
             img_avatar = dealBind.imgAvatar
@@ -38,14 +37,6 @@ class MyAdapter: RecyclerView.Adapter<MyAdapter.mViewHolder>() {
             tv_staff = dealBind.tvStaff
 
             parent = dealBind.root
-
-        }
-
-        fun bind(data: UserInfo) {
-            parent.tag = data
-            name.text = data.login
-            tv_staff.visibility = if(data.site_admin) View.VISIBLE else View.INVISIBLE
-            img_avatar.roundImage(data.avatar_url)
         }
 
         private fun setItemClick(){
@@ -56,6 +47,12 @@ class MyAdapter: RecyclerView.Adapter<MyAdapter.mViewHolder>() {
             }
         }
 
+        fun bind(data: UserInfo) {
+            parent.tag = data
+            name.text = data.login
+            tv_staff.visibility = if(data.site_admin) View.VISIBLE else View.INVISIBLE
+            img_avatar.roundImage(data.avatar_url)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): mViewHolder {
@@ -65,20 +62,19 @@ class MyAdapter: RecyclerView.Adapter<MyAdapter.mViewHolder>() {
 
         val dealBind : ItemUserinfoBinding = ItemUserinfoBinding.bind(inflater.inflate(R.layout.item_userinfo, parent, false))
         return mViewHolder(dealBind)
-
     }
 
-    override fun getItemCount() = unAssignList.size
+    override fun getItemCount() = dataList.size
 
     override fun onBindViewHolder(holder: mViewHolder, position: Int) {
 
         //呼叫上面的bind方法來綁定資料
-        holder.bind(unAssignList[position])
+        holder.bind(dataList[position])
 
     }
 
     //更新資料用
     fun updateList(list:List<UserInfo>){
-        unAssignList = list
+        dataList = list
     }
 }

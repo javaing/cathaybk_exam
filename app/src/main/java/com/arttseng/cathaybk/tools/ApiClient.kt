@@ -1,6 +1,6 @@
 package com.arttseng.screenrecorder.tools
 
-import com.arttseng.cathaybk.Const
+import com.arttseng.cathaybk.tools.Const
 import com.arttseng.cathaybk.tools.UserDetail
 import com.arttseng.cathaybk.tools.UserInfo
 import kotlinx.coroutines.Deferred

@@ -8,6 +8,4 @@ data class UserInfo (
     val login : String,
     val avatar_url : String,
     var site_admin : Boolean,
-    //var MobileNumber : String?=null,
-    //val Status : Int
 )

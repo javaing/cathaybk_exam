@@ -1,7 +1,6 @@
 package com.arttseng.cathaybk.tools
 
 import android.util.Log
-import com.arttseng.cathaybk.Const
 import com.arttseng.cathaybk.MyApplication
 import com.arttseng.screenrecorder.tools.ApiClient
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
