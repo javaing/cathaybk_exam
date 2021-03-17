@@ -7,12 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.arttseng.cathaybk.R
 import com.arttseng.cathaybk.UserDetailActivity
 import com.arttseng.cathaybk.databinding.ItemUserinfoBinding
+import com.arttseng.cathaybk.tools.DiffUtilHelper
 import com.arttseng.cathaybk.tools.UserInfo
 import com.arttseng.cathaybk.tools.roundImage
+import java.util.*
 
 class MyAdapter: RecyclerView.Adapter<MyAdapter.mViewHolder>() {
 
@@ -21,7 +24,7 @@ class MyAdapter: RecyclerView.Adapter<MyAdapter.mViewHolder>() {
 
     inner class mViewHolder : RecyclerView.ViewHolder {
 
-        constructor(dealBind : ItemUserinfoBinding) : super(dealBind.root){
+        constructor(dealBind: ItemUserinfoBinding) : super(dealBind.root){
             initView(dealBind)
             setItemClick()
         }
@@ -31,7 +34,7 @@ class MyAdapter: RecyclerView.Adapter<MyAdapter.mViewHolder>() {
         private lateinit var  tv_staff : TextView
         private lateinit var  parent : View
 
-        private fun initView(dealBind : ItemUserinfoBinding){
+        private fun initView(dealBind: ItemUserinfoBinding){
             img_avatar = dealBind.imgAvatar
             name = dealBind.tvName
             tv_staff = dealBind.tvStaff
@@ -74,7 +77,11 @@ class MyAdapter: RecyclerView.Adapter<MyAdapter.mViewHolder>() {
     }
 
     //更新資料用
-    fun updateList(list:List<UserInfo>){
+    fun updateList(list: List<UserInfo>){
         dataList = list
+
+        val oldData: List<UserInfo> = ArrayList(dataList)
+        val diffResult = DiffUtil.calculateDiff(DiffUtilHelper(oldData, dataList), true)
+        diffResult.dispatchUpdatesTo(this)
     }
 }
