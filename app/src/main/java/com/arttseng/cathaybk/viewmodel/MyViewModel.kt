@@ -10,7 +10,7 @@ import com.squareup.moshi.Types
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.launch
 
-class MyViewModel() : ViewModel() {
+class MyViewModel : ViewModel() {
 
     private val testStr = """
         [{

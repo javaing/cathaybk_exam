@@ -48,6 +48,4 @@ class MyApplication: Application() {
         super.onCreate()
         instance = this
     }
-
-
 }
