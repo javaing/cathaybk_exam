@@ -29,6 +29,8 @@ class MainActivity : AppCompatActivity() {
             val note = dealVM.loadAllUsers()
             updateUI(note)
         }
+
+        //Log.d("WebAccess", "Creating retrofit client")
     }
 
 

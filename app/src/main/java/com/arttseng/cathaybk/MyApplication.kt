@@ -18,7 +18,7 @@ class MyApplication: Application() {
 
         fun getOkHttpClient(): OkHttpClient {
             if(okHttpClient==null) {
-                if (BuildConfig.DEBUG) {
+                //if (BuildConfig.DEBUG) {
                     val interceptor = HttpLoggingInterceptor()
                     interceptor.level = HttpLoggingInterceptor.Level.BODY
                     okHttpClient = OkHttpClient.Builder()
@@ -32,13 +32,13 @@ class MyApplication: Application() {
                         .connectTimeout(80, TimeUnit.SECONDS)
                         .readTimeout(80, TimeUnit.SECONDS)
                         .build()
-                } else {
-                    okHttpClient = OkHttpClient.Builder()
-                        .retryOnConnectionFailure(true) //.addInterceptor(UserAgentInterc)
-                        .connectTimeout(80, TimeUnit.SECONDS)
-                        .readTimeout(80, TimeUnit.SECONDS)
-                        .build()
-                }
+//                } else {
+//                    okHttpClient = OkHttpClient.Builder()
+//                        .retryOnConnectionFailure(true) //.addInterceptor(UserAgentInterc)
+//                        .connectTimeout(80, TimeUnit.SECONDS)
+//                        .readTimeout(80, TimeUnit.SECONDS)
+//                        .build()
+//                }
             }
             return okHttpClient as OkHttpClient
         }

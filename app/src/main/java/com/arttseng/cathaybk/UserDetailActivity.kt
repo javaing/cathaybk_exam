@@ -57,7 +57,7 @@ class UserDetailActivity : AppCompatActivity() {
 }
 
 class MyViewModelFactory(val loginName: String) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T =
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
         modelClass.getConstructor(String::class.java)
             .newInstance(loginName)
 }
